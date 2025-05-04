@@ -1,9 +1,8 @@
-import { User, type BreadcrumbItem, type SharedData } from '@/types';
+import { User, type BreadcrumbItem } from '@/types';
 import { Transition } from '@headlessui/react';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { FormEventHandler, useState } from 'react';
+import { Head, useForm } from '@inertiajs/react';
+import { FormEventHandler } from 'react';
 
-import DeleteUser from '@/components/delete-user';
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import Heading from '@/components/heading';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import DeleteUserByAdmin from '@/components/delete-user-by-admin';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -26,7 +26,7 @@ type ProfileForm = {
   role: string;
 }
 
-export default function Edit({ user }: { user: User }) {
+export default function Edit({ user, roles, roleLabels }: { user: User, roles: any, roleLabels: Record<string, string> }) {
   // const { auth } = usePage<SharedData>().props;
 
   const { data, setData, patch, errors, processing, recentlySuccessful } = useForm<Required<ProfileForm>>({
@@ -106,9 +106,13 @@ export default function Edit({ user }: { user: User }) {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Select a role:</SelectLabel>
-                          <SelectItem value="admin">Admin</SelectItem>
-                          <SelectItem value="commenter">Commenter</SelectItem>
-                          <SelectItem value="user">User</SelectItem>
+                          {
+                            roles.map((role: any) => (
+                              <SelectItem key={role.id} value={role.name}>
+                                {roleLabels[role.name]}
+                              </SelectItem>
+                            ))
+                          }
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -132,7 +136,7 @@ export default function Edit({ user }: { user: User }) {
                 </form>
               </div>
 
-              <DeleteUser />
+              <DeleteUserByAdmin user={user} />
 
             </section>
           </div>

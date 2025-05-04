@@ -1,6 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { SharedData, User, type BreadcrumbItem } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { UserPen } from 'lucide-react';
 // import { Plus } from 'lucide-react';
 import { useEffect } from 'react';
 import { Toaster, toast } from 'sonner';
@@ -79,8 +80,8 @@ export default function Index({ users }: { users: User[] }) {
                       <td className="px-6 py-4">
                         {user.roles && user.roles.join(', ')}
                       </td>
-                      <td className="px-6 py-4 text-right">
-                        <Link href={route('users.edit', user.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
+                      <td className="px-6 py-4 text-center">
+                        <Link href={route('users.edit', user.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline"><UserPen /></Link>
                       </td>
                     </tr>
                   ))

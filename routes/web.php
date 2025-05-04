@@ -29,7 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('feature/{feature}/comments', [CommentController::class, 'store'])->name('comments.store')->middleware('can:' . PermissionsEnum::ManageComments->value);
     Route::delete('feature/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy')->middleware('can:' . PermissionsEnum::ManageComments->value);
 
-    Route::resource('users', UserController::class)->only(['index', 'edit', 'update', 'delete'])->middleware('role:' . RolesEnum::Admin->value);
+    Route::resource('users', UserController::class)->only(['index', 'edit', 'update', 'destroy'])->middleware('role:' . RolesEnum::Admin->value);
 });
 
 require __DIR__ . '/settings.php';

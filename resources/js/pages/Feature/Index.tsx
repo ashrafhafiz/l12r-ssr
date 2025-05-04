@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { can } from '@/helper';
 import AppLayout from '@/layouts/app-layout';
 import { Features, SharedData, User, type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, usePage, usePoll } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import { useEffect } from 'react';
 import { Toaster, toast } from 'sonner';
@@ -18,6 +18,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Index({ features }: { features: Features }) {
   const user: User = usePage<SharedData>().props.auth.user;
   const { success } = usePage<SharedData>().props;
+
+  usePoll(6000);
 
   useEffect(() => {
     if (success) {

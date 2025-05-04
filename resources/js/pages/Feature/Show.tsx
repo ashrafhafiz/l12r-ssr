@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { Feature, SharedData, User, type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, usePage, usePoll } from '@inertiajs/react';
 
 import FeatureItem from '@/components/FeatureItem';
 import FeatureNewCommentForm from '@/components/FeatureNewCommentForm';
@@ -21,6 +21,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Show({ feature }: { feature: Feature }) {
+
+  usePoll(5000);
 
   const user: User = usePage<SharedData>().props.auth.user;
   const { success, error } = usePage().props;

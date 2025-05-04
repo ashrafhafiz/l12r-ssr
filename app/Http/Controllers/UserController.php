@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\RolesEnum;
 use App\Http\Resources\AuthUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -27,6 +31,8 @@ class UserController extends Controller
     {
         return Inertia::render('User/Edit', [
             'user' => new AuthUserResource($user),
+            'roles' => Role::all(),
+            'roleLabels' => RolesEnum::labels(),
         ]);
     }
 
@@ -40,14 +46,29 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
         ]);
         $user->update($request->all());
+        $user->syncRoles($request->role);
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $user, Request $request)
     {
-        //
+        // dd(Auth::user()->password);
+        if (!Auth::user()->hasRole(RolesEnum::Admin->value)) {
+            abort(403, 'You are not authorized to delete this user.');
+        }
+
+        $request->validate([
+            'password' => ['required', function ($attribute, $value, $fail) {
+                if (!Hash::check($value, Auth::user()->password)) {
+                    $fail('The password is incorrect.');
+                }
+            }],
+        ]);
+
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
 }
